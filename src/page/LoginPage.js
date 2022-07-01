@@ -1,12 +1,12 @@
 import React from 'react';
-import Button from '../componet/common/Button';
+import AuthForm from '../componet/auth/AuthForm';
+import AuthTemplate from '../componet/auth/AuthTemplate';
 
 const LoginPage = () => {
   return (
-    <>
-      <div>로그인</div>
-      <Button>버튼</Button>
-    </>
+    <AuthTemplate>
+      <AuthForm type="login"></AuthForm>
+    </AuthTemplate>
   );
 };
 
