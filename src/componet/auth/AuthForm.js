@@ -44,12 +44,19 @@ const ButtonWithMarginTop = styled(Button)`
   margin-top: 1rem;
 `;
 
+const ErrorMessage = styled.div`
+  color: red;
+  text-align: center;
+  font-size: 0.875rem;
+  margin-top: 1rem;
+`;
+
 const textMap = {
   login: '로그인',
   register: '회원가입',
 };
 
-const AuthForm = ({ type, form, onChange, onSubmit }) => {
+const AuthForm = ({ type, form, onChange, onSubmit, error }) => {
   const text = textMap[type];
   return (
     <AuthFromBlock>
@@ -80,16 +87,13 @@ const AuthForm = ({ type, form, onChange, onSubmit }) => {
             value={form.passwordConfirm}
           ></StyledInput>
         )}
+        {error && <ErrorMessage>에러 발생!</ErrorMessage>}
         <ButtonWithMarginTop cyan fullWidth>
           {text}
         </ButtonWithMarginTop>
       </form>
       <Footer>
-        {type === 'login' ? (
-          <Link to="/register">회원가입</Link>
-        ) : (
-          <Link to="/login">로그인</Link>
-        )}
+        {type === 'login' ? <Link to="/register">회원가입</Link> : <Link to="/login">로그인</Link>}
       </Footer>
     </AuthFromBlock>
   );
