@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { useNavigate } from '../../../node_modules/react-router-dom/index';
 import AuthForm from '../../componet/auth/AuthForm';
 import { changeField, initializeForm, register } from '../../module/auth';
 import { check } from '../../module/user';
 
-const RegisterForm = ({ history }) => {
+const RegisterForm = () => {
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { form, auth, authError, user } = useSelector(({ auth, user }) => ({
     form: auth.register,
@@ -68,11 +69,11 @@ const RegisterForm = ({ history }) => {
     if (user) {
       console.log('check API 성공');
       console.log(user);
-      history.push('/');
+      navigate('/');
     }
-  }, [history, user]);
+  }, [navigate, user]);
 
   return <AuthForm type="register" form={form} onChange={onChange} onSubmit={onSubmit} error={error}></AuthForm>;
 };
 
-export default withRouter(RegisterForm);
+export default RegisterForm;
