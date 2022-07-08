@@ -39,8 +39,8 @@ const LoginForm = () => {
 
   useEffect(() => {
     if (authError) {
-      console.log('로그은 에러 발생');
       console.log(authError);
+      console.log('로그인 에러 발생');
       setError('로그인 실패');
       return;
     }
@@ -53,9 +53,12 @@ const LoginForm = () => {
 
   useEffect(() => {
     if (user) {
-      console.log('check API 성공');
-      console.log(user);
-      navigate('/');
+      navigate('/main');
+      try {
+        localStorage.setItem('user', JSON.stringify(user));
+      } catch (e) {
+        console.log(e);
+      }
     }
   }, [navigate, user]);
 

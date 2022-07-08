@@ -1,10 +1,10 @@
 import React from 'react';
-import Header from '../componet/common/Header';
+import HeaderContainer from '../container/common/HeaderContainer';
 
 const MainPage = () => {
   return (
     <>
-      <Header></Header>
+      <HeaderContainer></HeaderContainer>
       <div>안녕하세요.</div>
     </>
   );

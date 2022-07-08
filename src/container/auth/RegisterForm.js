@@ -67,9 +67,12 @@ const RegisterForm = () => {
 
   useEffect(() => {
     if (user) {
-      console.log('check API 성공');
-      console.log(user);
-      navigate('/');
+      navigate('/main');
+      try {
+        localStorage.setItem('user', JSON.stringify('user'));
+      } catch (e) {
+        console.log(e);
+      }
     }
   }, [navigate, user]);
 
