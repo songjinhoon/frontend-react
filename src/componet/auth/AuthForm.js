@@ -52,8 +52,8 @@ const ErrorMessage = styled.div`
 `;
 
 const textMap = {
-  login: '로그인',
-  register: '회원가입',
+  signin: '로그인',
+  signup: '회원가입',
 };
 
 const AuthForm = ({ type, form, onChange, onSubmit, error }) => {
@@ -62,39 +62,25 @@ const AuthForm = ({ type, form, onChange, onSubmit, error }) => {
     <AuthFromBlock>
       <h3>{text}</h3>
       <form onSubmit={onSubmit}>
-        <StyledInput
-          autoComplete="username"
-          name="username"
-          placeholder="아이디"
-          onChange={onChange}
-          value={form.username}
-        ></StyledInput>
-        <StyledInput
-          autoComplete="new-password"
-          name="password"
-          placeholder="비밀번호"
-          type="password"
-          onChange={onChange}
-          value={form.password}
-        ></StyledInput>
-        {type === 'register' && (
+        <StyledInput autoComplete="username" name="id" placeholder="아이디" onChange={onChange} value={form.id}></StyledInput>
+        <StyledInput autoComplete="new-password" name="pwd" placeholder="비밀번호" type="password" onChange={onChange} value={form.pwd}></StyledInput>
+        {type === 'signup' && (
           <StyledInput
             autoComplete="new-password"
-            name="passwordConfirm"
+            name="pwdConfirm"
             placeholder="비밀번호 확인"
             type="password"
             onChange={onChange}
-            value={form.passwordConfirm}
+            value={form.pwdConfirm}
           ></StyledInput>
         )}
+        {type === 'signup' && <StyledInput name="nm" placeholder="이름" onChange={onChange} value={form.nm}></StyledInput>}
         {error && <ErrorMessage>에러 발생!</ErrorMessage>}
         <ButtonWithMarginTop cyan fullWidth>
           {text}
         </ButtonWithMarginTop>
       </form>
-      <Footer>
-        {type === 'login' ? <Link to="/register">회원가입</Link> : <Link to="/login">로그인</Link>}
-      </Footer>
+      <Footer>{type === 'signin' ? <Link to="/signup">회원가입</Link> : <Link to="/signin">로그인</Link>}</Footer>
     </AuthFromBlock>
   );
 };

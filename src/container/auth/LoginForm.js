@@ -2,15 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from '../../../node_modules/react-router-dom/index';
 import AuthForm from '../../componet/auth/AuthForm';
-import { changeField, initializeForm, login } from '../../module/auth';
-import { check } from '../../module/user';
+import { authInit, changeField, initializeForm, signIn } from '../../module/auth';
+import { complete } from '../../module/user';
 
 const LoginForm = () => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { form, auth, authError, user } = useSelector(({ auth, user }) => ({
-    form: auth.login,
+    form: auth.signIn,
     auth: auth.auth,
     authError: auth.authError,
     user: user.user,
@@ -20,7 +20,7 @@ const LoginForm = () => {
     const { value, name } = e.target;
     dispatch(
       changeField({
-        form: 'login',
+        form: 'signIn',
         key: name,
         value,
       }),
@@ -29,12 +29,12 @@ const LoginForm = () => {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    const { username, password } = form;
-    dispatch(login({ username, password }));
+    const { id, pwd } = form;
+    dispatch(signIn({ id, pwd }));
   };
 
   useEffect(() => {
-    dispatch(initializeForm('login'));
+    dispatch(initializeForm('signIn'));
   }, [dispatch]);
 
   useEffect(() => {
@@ -45,9 +45,9 @@ const LoginForm = () => {
       return;
     }
     if (auth) {
-      console.log('로그인 성공');
-      console.log(auth);
-      dispatch(check());
+      const { data } = auth;
+      dispatch(complete(data[0]));
+      dispatch(authInit());
     }
   }, [auth, authError, dispatch]);
 
@@ -62,7 +62,7 @@ const LoginForm = () => {
     }
   }, [navigate, user]);
 
-  return <AuthForm type="login" form={form} onChange={onChange} onSubmit={onSubmit} error={error}></AuthForm>;
+  return <AuthForm type="signin" form={form} onChange={onChange} onSubmit={onSubmit} error={error}></AuthForm>;
 };
 
 export default LoginForm;

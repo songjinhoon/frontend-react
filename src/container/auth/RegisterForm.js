@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from '../../../node_modules/react-router-dom/index';
 import AuthForm from '../../componet/auth/AuthForm';
-import { changeField, initializeForm, register } from '../../module/auth';
+import { changeField, initializeForm, signUp } from '../../module/auth';
 import { check } from '../../module/user';
 
 const RegisterForm = () => {
@@ -10,7 +10,7 @@ const RegisterForm = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { form, auth, authError, user } = useSelector(({ auth, user }) => ({
-    form: auth.register,
+    form: auth.signUp,
     auth: auth.auth,
     authError: auth.authError,
     user: user.user,
@@ -20,7 +20,7 @@ const RegisterForm = () => {
     const { value, name } = e.target;
     dispatch(
       changeField({
-        form: 'register',
+        form: 'signUp',
         key: name,
         value,
       }),
@@ -29,20 +29,20 @@ const RegisterForm = () => {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    const { username, password, passwordConfirm } = form;
-    if ([username, password, passwordConfirm].includes('')) {
+    const { id, pwd, pwdConfirm, nm } = form;
+    if ([id, pwd, pwdConfirm, nm].includes('')) {
       setError('빈 칸을 모두 입력하세요.');
       return;
     }
 
-    if (password !== passwordConfirm) {
+    if (pwd !== pwdConfirm) {
       setError('비밀번호가 일치하지 않습니다.');
       /* ?? 버그인가 */
-      changeField({ form: 'register', key: 'password', value: '' });
-      changeField({ form: 'register', key: 'passwordConfirm', value: '' });
+      changeField({ form: 'signUp', key: 'pwd', value: '' });
+      changeField({ form: 'signUp', key: 'pwdConfirm', value: '' });
       return;
     }
-    dispatch(register({ username, password }));
+    dispatch(signUp({ id, pwd, pwdConfirm, nm }));
   };
 
   useEffect(() => {
@@ -76,7 +76,7 @@ const RegisterForm = () => {
     }
   }, [navigate, user]);
 
-  return <AuthForm type="register" form={form} onChange={onChange} onSubmit={onSubmit} error={error}></AuthForm>;
+  return <AuthForm type="signup" form={form} onChange={onChange} onSubmit={onSubmit} error={error}></AuthForm>;
 };
 
 export default RegisterForm;

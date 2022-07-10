@@ -5,10 +5,12 @@ import createRequestSaga, { createRequestActionTypes } from '../lib/createReques
 
 const TEMP_SET_USER = 'user/TEMP_SET_USER';
 const [CHECK, CHECK_SUCCESS, CHECK_FAILURE] = createRequestActionTypes('user/CHECK');
+const COMPLETE = 'user/COMPLETE';
 const LOGOUT = 'user/LOGOUT';
 
 export const tempSetUser = createAction(TEMP_SET_USER, (user) => user);
 export const check = createAction(CHECK);
+export const complete = createAction(COMPLETE, (user) => user);
 export const logout = createAction(LOGOUT);
 
 const checkSaga = createRequestSaga(CHECK, authAPI.check);
@@ -19,19 +21,19 @@ function checkFailureSaga() {
     console.log(e);
   }
 }
-function* logoutSaga() {
-  try {
-    yield call(authAPI.logout);
-    localStorage.removeItem('user');
-  } catch (e) {
-    console.log(e);
-  }
-}
+// function* logoutSaga() {
+//   try {
+//     yield call(authAPI.logout);
+//     localStorage.removeItem('user');
+//   } catch (e) {
+//     console.log(e);
+//   }
+// }
 
 export function* userSaga() {
   yield takeLatest(CHECK, checkSaga);
   yield takeLatest(CHECK_FAILURE, checkFailureSaga);
-  yield takeLatest(LOGOUT, logoutSaga);
+  // yield takeLatest(LOGOUT, logoutSaga);
 }
 
 const initialState = {
@@ -55,11 +57,24 @@ export default handleActions(
       user: null,
       checkError: error,
     }),
-    [LOGOUT]: (state) => ({
+    [COMPLETE]: (state, { payload: user }) => ({
       ...state,
-      user: null,
+      user,
       checkError: null,
     }),
+    [LOGOUT]: (state) => {
+      try {
+        localStorage.removeItem('user');
+        localStorage.removeItem('token');
+      } catch (e) {
+        console.log(e);
+      }
+      return {
+        ...state,
+        user: null,
+        checkError: null,
+      };
+    },
   },
   initialState,
 );

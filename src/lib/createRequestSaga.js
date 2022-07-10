@@ -13,6 +13,12 @@ export default function requestSaga(type, request) {
     yield put(startLoading(type));
     try {
       const response = yield call(request, action.payload);
+      if (type === 'auth/SIGNIN')
+        try {
+          localStorage.setItem('token', response.headers.authorization);
+        } catch (e) {
+          console.log(e);
+        }
       yield put({
         type: SUCCESS,
         payload: response.data,

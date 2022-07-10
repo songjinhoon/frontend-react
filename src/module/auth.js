@@ -1,61 +1,50 @@
 import { createAction, handleActions } from 'redux-actions';
 import produce from '../../node_modules/immer/';
-import createReuqestSaga, {
-  createRequestActionTypes,
-} from '../lib/createRequestSaga';
+import createReuqestSaga, { createRequestActionTypes } from '../lib/createRequestSaga';
 import { takeLatest } from 'redux-saga/effects';
 import * as authAPI from '../lib/api/auth';
 
 const INITIALIZE_FORM = 'auth/INITIALIZE_FORM';
 const CHANGE_FIELD = 'auth/CHANGE_FIELD';
-const [REGISTER, REGISTER_SUCCESS, REGISTER_FAILURE] =
-  createRequestActionTypes('auth/REGISTER');
-const [LOGIN, LOGIN_SUCCESS, LOGIN_FAILURE] =
-  createRequestActionTypes('auth/LOGIN');
+const [SIGNUP, SIGNUP_SUCCESS, SIGNUP_FAILURE] = createRequestActionTypes('auth/SIGNUP');
+const [SIGNIN, SIGNIN_SUCCESS, SIGNIN_FAILURE] = createRequestActionTypes('auth/SIGNIN');
+const AUTH_INIT = 'auth/AUTH_INIT';
 
-export const initializeForm = createAction(
-  INITIALIZE_FORM,
-  (form) => form,
-);
-export const changeField = createAction(
-  CHANGE_FIELD,
-  ({ form, key, value }) => ({
-    form,
-    key,
-    value,
-  }),
-);
-export const register = createAction(
-  REGISTER,
-  ({ username, password }) => ({
-    username,
-    password,
-  }),
-);
-export const login = createAction(
-  LOGIN,
-  ({ username, password }) => ({
-    username,
-    password,
-  }),
-);
+export const initializeForm = createAction(INITIALIZE_FORM, (form) => form);
+export const changeField = createAction(CHANGE_FIELD, ({ form, key, value }) => ({
+  form,
+  key,
+  value,
+}));
+export const signUp = createAction(SIGNUP, ({ id, pwd, pwdConfirm, nm }) => ({
+  id,
+  pwd,
+  pwdConfirm,
+  nm,
+}));
+export const signIn = createAction(SIGNIN, ({ id, pwd }) => ({
+  id,
+  pwd,
+}));
+export const authInit = createAction(AUTH_INIT);
 
-const signupSaga = createReuqestSaga(REGISTER, authAPI.signup);
-const signinSaga = createReuqestSaga(LOGIN, authAPI.signin);
+const signupSaga = createReuqestSaga(SIGNUP, authAPI.signup);
+const signinSaga = createReuqestSaga(SIGNIN, authAPI.signin);
 export function* authSaga() {
-  yield takeLatest(REGISTER, signupSaga);
-  yield takeLatest(LOGIN, signinSaga);
+  yield takeLatest(SIGNUP, signupSaga);
+  yield takeLatest(SIGNIN, signinSaga);
 }
 
 const initialState = {
-  register: {
-    username: '',
-    password: '',
-    passwordConfirm: '',
+  signUp: {
+    id: '',
+    pwd: '',
+    pwdConfirm: '',
+    nm: '',
   },
-  login: {
-    username: '',
-    password: '',
+  signIn: {
+    id: '',
+    pwd: '',
   },
   auth: null,
   authError: null,
@@ -72,23 +61,28 @@ const auth = handleActions(
       produce(state, (draft) => {
         draft[form][key] = value;
       }),
-    [REGISTER_SUCCESS]: (state, { payload: auth }) => ({
+    [SIGNUP_SUCCESS]: (state, { payload: auth }) => ({
       ...state,
       authError: null,
       auth,
     }),
-    [REGISTER_FAILURE]: (state, { payload: error }) => ({
+    [SIGNUP_FAILURE]: (state, { payload: error }) => ({
       ...state,
       authError: error,
     }),
-    [LOGIN_SUCCESS]: (state, { payload: auth }) => ({
+    [SIGNIN_SUCCESS]: (state, { payload: auth }) => ({
       ...state,
       authError: null,
       auth,
     }),
-    [LOGIN_FAILURE]: (state, { payload: error }) => ({
+    [SIGNIN_FAILURE]: (state, { payload: error }) => ({
       ...state,
       authError: error,
+    }),
+    [AUTH_INIT]: (state) => ({
+      ...state,
+      auth: null,
+      authError: null,
     }),
   },
   initialState,

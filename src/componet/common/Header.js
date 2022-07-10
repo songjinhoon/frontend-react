@@ -46,12 +46,12 @@ const Header = ({ user, onLogout }) => {
           </Link>
           {user ? (
             <div className="right">
-              <UserInfo>{user.username}</UserInfo>
+              <UserInfo>{user.nm}</UserInfo>
               <Button onClick={onLogout}>로그아웃</Button>
             </div>
           ) : (
             <div className="right">
-              <Button to="/login">로그인</Button>
+              <Button to="/signin">로그인</Button>
             </div>
           )}
         </Wrapper>
